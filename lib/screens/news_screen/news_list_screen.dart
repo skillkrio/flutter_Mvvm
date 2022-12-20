@@ -54,7 +54,12 @@ class _NewsListScreenState extends State<NewsListScreen> {
               ),
               onSubmitted: (inputs) {
                 //fetch all articles related to keyword
-                print("Works when keyboard return is triggered");
+                if (inputs.isNotEmpty) {
+                  viewModel.searchArticle(inputs);
+                }
+                if (inputs.isEmpty) {
+                  viewModel.populateTopHeadlines();
+                }
               },
             ),
             const SizedBox(

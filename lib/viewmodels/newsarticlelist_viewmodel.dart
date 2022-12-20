@@ -7,6 +7,15 @@ import "package:flutter/foundation.dart";
 class NewsArticleListViewModel extends ChangeNotifier {
   List<NewsArticleViewModel> newsArticleList = [];
 
+  Future<void> searchArticle(String keyword) async {
+    List<NewsArticle> searchedArticle =
+        await WebService().fetchHeadlineByKeyword(keyword);
+    newsArticleList = searchedArticle
+        .map((article) => NewsArticleViewModel(article))
+        .toList();
+    notifyListeners();
+  }
+
   //populating the List<NewsArticleViewModel>
   Future<void> populateTopHeadlines() async {
     List<NewsArticle> topHeadlines = await WebService().fetchTopHeadline();
