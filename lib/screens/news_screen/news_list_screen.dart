@@ -17,7 +17,6 @@ class _NewsListScreenState extends State<NewsListScreen> {
 //  We set the listen parameter to false, since we are only invoking the method and we do not need to listen to anything
     Provider.of<NewsArticleListViewModel>(context, listen: false)
         .populateTopHeadlines();
-
     super.initState();
   }
 
@@ -57,18 +56,30 @@ class _NewsListScreenState extends State<NewsListScreen> {
                 if (inputs.isNotEmpty) {
                   viewModel.searchArticle(inputs);
                 }
-                if (inputs.isEmpty) {
-                  viewModel.populateTopHeadlines();
-                }
               },
             ),
             const SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: NewsList(articles: viewModel.newsArticleList),
-            ),
+            _buildList(viewModel),
           ],
         ));
+  }
+
+  Widget _buildList(NewsArticleListViewModel viewModel) {
+    switch (viewModel.loadingStatus) {
+      case LoadingStatus.loading:
+        return const Align(
+          child: CircularProgressIndicator(),
+        );
+      case LoadingStatus.empty:
+        return const Align(
+          child: Text("No Data Found"),
+        );
+      case LoadingStatus.commpleted:
+        return Expanded(
+          child: NewsList(articles: viewModel.newsArticleList),
+        );
+    }
   }
 }
