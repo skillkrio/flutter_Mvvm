@@ -2,14 +2,14 @@ import "package:flutter/material.dart";
 import 'package:flutter_mvvm/viewmodels/newsarticlelist_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class NewsList extends StatefulWidget {
-  const NewsList({super.key});
+class NewsListScreen extends StatefulWidget {
+  const NewsListScreen({super.key});
 
   @override
-  State<NewsList> createState() => _NewsListState();
+  State<NewsListScreen> createState() => _NewsListScreenState();
 }
 
-class _NewsListState extends State<NewsList> {
+class _NewsListScreenState extends State<NewsListScreen> {
   @override
   void initState() {
 //  We set the listen parameter to false, since we are only invoking the method and we do not need to listen to anything
