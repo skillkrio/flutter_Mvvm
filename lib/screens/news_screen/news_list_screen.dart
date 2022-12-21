@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter_mvvm/screens/news_screen/components/news_list.dart';
+import 'package:flutter_mvvm/screens/news_screen/newsarticle_details_screen.dart';
+import 'package:flutter_mvvm/viewmodels/newsarticle_viewmodel.dart';
 import 'package:flutter_mvvm/viewmodels/newsarticlelist_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,34 @@ class NewsListScreen extends StatefulWidget {
 
 class _NewsListScreenState extends State<NewsListScreen> {
   final textEditingController = TextEditingController();
+
+  void _showNewsArticleDetails(NewsArticleViewModel article) {
+    print(context.hashCode);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => NewsArticleDetailsScreen(article: article),
+    ));
+  }
+
+  Widget _buildList(NewsArticleListViewModel viewModel) {
+    switch (viewModel.loadingStatus) {
+      case LoadingStatus.loading:
+        return const Align(
+          child: CircularProgressIndicator(),
+        );
+      case LoadingStatus.empty:
+        return const Align(
+          child: Text("No Data Found"),
+        );
+      case LoadingStatus.commpleted:
+        return Expanded(
+          child: NewsList(
+            articles: viewModel.newsArticleList,
+            onselected: _showNewsArticleDetails,
+          ),
+        );
+    }
+  }
+
   @override
   void initState() {
 //  We set the listen parameter to false, since we are only invoking the method and we do not need to listen to anything
@@ -28,6 +58,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.hashCode);
     final viewModel = Provider.of<NewsArticleListViewModel>(context);
     return Scaffold(
         appBar: AppBar(
@@ -64,22 +95,5 @@ class _NewsListScreenState extends State<NewsListScreen> {
             _buildList(viewModel),
           ],
         ));
-  }
-
-  Widget _buildList(NewsArticleListViewModel viewModel) {
-    switch (viewModel.loadingStatus) {
-      case LoadingStatus.loading:
-        return const Align(
-          child: CircularProgressIndicator(),
-        );
-      case LoadingStatus.empty:
-        return const Align(
-          child: Text("No Data Found"),
-        );
-      case LoadingStatus.commpleted:
-        return Expanded(
-          child: NewsList(articles: viewModel.newsArticleList),
-        );
-    }
   }
 }
